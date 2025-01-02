@@ -1,4 +1,6 @@
 <script lang="ts">
+     import { Button } from "$lib/components/ui/button/index";
+     import { Pause, Play, RefreshCcw } from 'lucide-svelte';
     let props = $props<{
         status: 'running' | 'paused' | 'stopped';
         onStart: () => void;
@@ -9,29 +11,32 @@
 
 <div class="flex gap-4 justify-center my-4">
     {#if props.status === 'stopped' || props.status === 'paused'}
-        <button
+        <Button
             onclick={props.onStart}
-            class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
+            class="bg-green-600 hover:bg-green-700 text-white px-6 py-4 rounded-3xl"
         >
-            {props.status === 'stopped' ? 'Start' : 'Resume'}
-        </button>
+            <!-- {props.status === 'stopped' ? 'Start' : 'Resume'} -->
+            <Play class="w-6 h-6" />
+        </Button>
     {/if}
     
     {#if props.status === 'running'}
-        <button
+        <Button
             onclick={props.onPause}
-            class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded"
+            class=" text-white px-6 py-4 rounded-3xl"
         >
-            Pause
-        </button>
+            <!-- Pause -->
+            <Pause class="w-6 h-6" />
+        </Button>
     {/if}
     
     {#if props.status !== 'stopped' && props.status == 'paused'}
-        <button
+        <Button
             onclick={props.onReset}
-            class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
+            class="bg-red-500 hover:bg-red-600 text-white px-6 py-4 rounded-3xl"
         >
-            Reset
-        </button>
+            <!-- Reset -->
+            <RefreshCcw class="w-6 h-6" />
+        </Button>
     {/if}
 </div> 

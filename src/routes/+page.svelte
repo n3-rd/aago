@@ -8,6 +8,9 @@
     import SessionName from '$lib/components/SessionName.svelte';
     import HistoryDisplay from '$lib/components/HistoryDisplay.svelte';
     import type { TimerSettings as TimerSettingsType, TimerState, TimerStatus, SessionHistory } from '$lib/types';
+    import * as Dialog from "$lib/components/ui/dialog";
+    import { Button } from "$lib/components/ui/button";
+	import { Pencil, RefreshCcw, Coffee, Brain, Battery } from 'lucide-svelte';
 
     let timeLeft = $state(0);
     let status = $state<TimerStatus>('stopped');
@@ -113,18 +116,46 @@
 <main class="container mx-auto px-4 py-8 max-w-2xl">
     <h1 class="text-3xl font-bold text-center mb-8">Pomodoro Timer</h1>
     
-    <SessionName
-        currentName={sessionName}
-        onNameChange={(name) => sessionName = name}
-    />
-    
-    <div class="text-center mb-4">
-        <span class="text-lg font-semibold">
-            {timerState === 'work' ? 'Work Time' : timerState === 'break' ? 'Break Time' : 'Long Break'}
-        </span>
+    <div class="text-center mb-4 flex justify-center items-center">
+        <div class="flex items-center gap-2">
+            {#if timerState === 'work'}
+                <Brain class="w-5 h-5 text-blue-600" />
+                <span class="text-lg font-semibold text-blue-600">Work Time</span>
+            {:else if timerState === 'break'}
+                <Coffee class="w-5 h-5 text-green-600" />
+                <span class="text-lg font-semibold text-green-600">Break Time</span>
+            {:else}
+                <Battery class="w-5 h-5 text-purple-600" />
+                <span class="text-lg font-semibold text-purple-600">Long Break</span>
+            {/if}
+        </div>
         <span class="text-sm ml-2">
-            (Session {Math.floor(completedSessions / $timerSettings.sessionsBeforeLongBreak) + 1})
+            ({sessionName || `Session ${Math.floor(completedSessions / $timerSettings.sessionsBeforeLongBreak) + 1}`})
         </span>
+
+        <Dialog.Root>
+            <Dialog.Trigger>
+                <Button variant="ghost" class="ml-4 h-8 w-8 bg-transparent rounded-full text-gray-800 px-2 py-1"> 
+                    <Pencil class="w-6 h-6" />
+                </Button>
+            </Dialog.Trigger>
+            <Dialog.Content class="sm:max-w-[425px]">
+                <Dialog.Header>
+                    <Dialog.Title>Edit Session Name</Dialog.Title>
+                    <Dialog.Description>
+                        Give your session a meaningful name.
+                    </Dialog.Description>
+                </Dialog.Header>
+                <div class="py-4">
+                    <SessionName
+                        currentName={sessionName}
+                        onNameChange={(name) => {
+                            sessionName = name;
+                        }}
+                    />
+                </div>
+            </Dialog.Content>
+        </Dialog.Root>
     </div>
 
     <div class="relative h-80 w-80 mx-auto text-black rounded-full flex justify-center items-center">
@@ -142,18 +173,35 @@
         onReset={resetTimer}
     />
 
-    <div class="text-center mt-8">
-        <button
-            onclick={() => showSettings = !showSettings}
-            class="text-blue-500 hover:text-blue-600 underline"
-        >
-            {showSettings ? 'Hide Settings' : 'Show Settings'}
-        </button>
+    <div class="flex justify-center gap-4 mt-8">
+        <Dialog.Root>
+            <Dialog.Trigger>
+                <Button variant="outline">Settings</Button>
+            </Dialog.Trigger>
+            <Dialog.Content class="sm:max-w-[425px]">
+                <Dialog.Header>
+                    <Dialog.Title>Timer Settings</Dialog.Title>
+                    <Dialog.Description>
+                        Adjust your timer durations and preferences.
+                    </Dialog.Description>
+                </Dialog.Header>
+                <TimerSettings onSave={updateSettings} />
+            </Dialog.Content>
+        </Dialog.Root>
+
+        <Dialog.Root>
+            <Dialog.Trigger>
+                <Button variant="outline">History</Button>
+            </Dialog.Trigger>
+            <Dialog.Content class="sm:max-w-[600px]">
+                <Dialog.Header>
+                    <Dialog.Title>Session History</Dialog.Title>
+                    <Dialog.Description>
+                        View your completed and interrupted sessions.
+                    </Dialog.Description>
+                </Dialog.Header>
+                <HistoryDisplay />
+            </Dialog.Content>
+        </Dialog.Root>
     </div>
-
-    {#if showSettings}
-        <TimerSettings onSave={updateSettings} />
-    {/if}
-
-    <HistoryDisplay />
 </main>
