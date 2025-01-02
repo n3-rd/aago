@@ -1,16 +1,21 @@
 <script lang="ts">
     import { onDestroy } from 'svelte';
     import { timerSettings } from '$lib/stores/timerStore';
+    import { sessionHistory } from '$lib/stores/historyStore';
     import TimerDisplay from '$lib/components/TimerDisplay.svelte';
     import TimerControls from '$lib/components/TimerControls.svelte';
     import TimerSettings from '$lib/components/TimerSettings.svelte';
-    import type { TimerSettings as TimerSettingsType, TimerState, TimerStatus } from '$lib/types';
+    import SessionName from '$lib/components/SessionName.svelte';
+    import HistoryDisplay from '$lib/components/HistoryDisplay.svelte';
+    import type { TimerSettings as TimerSettingsType, TimerState, TimerStatus, SessionHistory } from '$lib/types';
 
     let timeLeft = $state(0);
     let status = $state<TimerStatus>('stopped');
     let timerState = $state<TimerState>('work');
     let completedSessions = $state(0);
     let showSettings = $state(false);
+    let sessionName = $state('');
+    let sessionStartTime = $state<string | null>(null);
     
     let timer: number;
 
@@ -31,6 +36,7 @@
     function startTimer() {
         if (status === 'stopped') {
             timeLeft = getDuration();
+            sessionStartTime = new Date().toISOString();
         }
         status = 'running';
         timer = setInterval(() => {
@@ -48,12 +54,31 @@
     }
 
     function resetTimer() {
+        if (status !== 'stopped' && sessionStartTime) {
+            recordSession(false);
+        }
         status = 'stopped';
         clearInterval(timer);
         timeLeft = getDuration();
+        sessionStartTime = null;
+    }
+
+    function recordSession(completed: boolean) {
+        const session: SessionHistory = {
+            id: crypto.randomUUID(),
+            name: sessionName,
+            type: timerState,
+            duration: getDuration() - timeLeft,
+            startTime: sessionStartTime!,
+            endTime: new Date().toISOString(),
+            completed
+        };
+        sessionHistory.addSession(session);
     }
 
     function handleTimerComplete() {
+        recordSession(true);
+        
         if (timerState === 'work') {
             completedSessions++;
             if (completedSessions % $timerSettings.sessionsBeforeLongBreak === 0) {
@@ -76,12 +101,20 @@
     }
 
     onDestroy(() => {
+        if (status !== 'stopped' && sessionStartTime) {
+            recordSession(false);
+        }
         clearInterval(timer);
     });
 </script>
 
 <main class="container mx-auto px-4 py-8 max-w-2xl">
     <h1 class="text-3xl font-bold text-center mb-8">Pomodoro Timer</h1>
+    
+    <SessionName
+        currentName={sessionName}
+        onNameChange={(name) => sessionName = name}
+    />
     
     <div class="text-center mb-4">
         <span class="text-lg font-semibold">
@@ -113,4 +146,6 @@
     {#if showSettings}
         <TimerSettings onSave={updateSettings} />
     {/if}
+
+    <HistoryDisplay />
 </main>
