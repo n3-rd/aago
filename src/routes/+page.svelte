@@ -89,7 +89,9 @@
         } else {
             timerState = 'work';
         }
-        resetTimer();
+        
+        sessionStartTime = new Date().toISOString();
+        timeLeft = getDuration();
     }
 
     function updateSettings(newSettings: TimerSettingsType) {
