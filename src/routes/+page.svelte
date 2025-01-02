@@ -127,7 +127,13 @@
         </span>
     </div>
 
-    <TimerDisplay minutes={minutes} seconds={seconds} />
+    <div class="relative h-80 w-80 mx-auto text-black rounded-full flex justify-center items-center">
+        <TimerDisplay 
+            minutes={minutes} 
+            seconds={seconds} 
+            initialDuration={getDuration()}
+        />
+    </div>
     
     <TimerControls
         status={status}

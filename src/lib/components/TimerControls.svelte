@@ -26,7 +26,7 @@
         </button>
     {/if}
     
-    {#if props.status !== 'stopped'}
+    {#if props.status !== 'stopped' && props.status == 'paused'}
         <button
             onclick={props.onReset}
             class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
