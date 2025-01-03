@@ -11,6 +11,7 @@
     import * as Dialog from "$lib/components/ui/dialog";
     import { Button } from "$lib/components/ui/button";
 	import { Pencil, RefreshCcw, Coffee, Brain, Battery } from 'lucide-svelte';
+    import { soundManager } from '$lib/utils/sounds';
 
     let timeLeft = $state(0);
     let status = $state<TimerStatus>('stopped');
@@ -42,6 +43,7 @@
             sessionStartTime = new Date().toISOString();
         }
         status = 'running';
+        soundManager.play('click');
         timer = setInterval(() => {
             if (timeLeft > 0) {
                 timeLeft--;
@@ -53,6 +55,7 @@
 
     function pauseTimer() {
         status = 'paused';
+        soundManager.play('click');
         clearInterval(timer);
     }
 
@@ -61,6 +64,7 @@
             recordSession(false);
         }
         status = 'stopped';
+        soundManager.play('reset');
         clearInterval(timer);
         timeLeft = getDuration();
         sessionStartTime = null;
@@ -81,6 +85,7 @@
 
     function handleTimerComplete() {
         recordSession(true);
+        soundManager.play('complete');
         
         if (timerState === 'work') {
             completedSessions++;
