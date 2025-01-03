@@ -113,30 +113,39 @@
     });
 </script>
 
-<main class="container mx-auto px-4 py-8 max-w-2xl">
-    <h1 class="text-3xl font-bold text-center mb-8">Pomodoro Timer</h1>
+<main class="container mx-auto px-4 py-8 max-w-xl">
+    <h1 class="text-2xl font-light text-center mb-12 tracking-wide">Pomodoro Timer</h1>
     
-    <div class="text-center mb-4 flex justify-center items-center">
+    <div class="text-center mb-8 flex justify-center items-center">
         <div class="flex items-center gap-2">
             {#if timerState === 'work'}
-                <Brain class="w-5 h-5 text-blue-600" />
-                <span class="text-lg font-semibold text-blue-600">Work Time</span>
+                <div class="transition-all duration-700 ease-in-out animate-in fade-in-50 flex items-center gap-2">
+                    <Brain class="w-4 h-4 text-blue-600" />
+                    <span class="text-base font-light text-blue-600">Work Time</span>
+                </div>
             {:else if timerState === 'break'}
-                <Coffee class="w-5 h-5 text-green-600" />
-                <span class="text-lg font-semibold text-green-600">Break Time</span>
+                <div class="transition-all duration-700 ease-in-out animate-in fade-in-50 flex items-center gap-2">
+                    <Coffee class="w-4 h-4 text-green-600" />
+                    <span class="text-base font-light text-green-600">Break Time</span>
+                </div>
             {:else}
-                <Battery class="w-5 h-5 text-purple-600" />
-                <span class="text-lg font-semibold text-purple-600">Long Break</span>
+                <div class="transition-all duration-700 ease-in-out animate-in fade-in-50 flex items-center gap-2">
+                    <Battery class="w-4 h-4 text-purple-600" />
+                    <span class="text-base font-light text-purple-600">Long Break</span>
+                </div>
             {/if}
         </div>
-        <span class="text-sm ml-2">
+        <span class="text-xs ml-2 text-gray-500 font-light">
             ({sessionName || `Session ${Math.floor(completedSessions / $timerSettings.sessionsBeforeLongBreak) + 1}`})
         </span>
 
         <Dialog.Root>
             <Dialog.Trigger>
-                <Button variant="ghost" class="ml-4 h-8 w-8 bg-transparent rounded-full text-gray-800 px-2 py-1"> 
-                    <Pencil class="w-6 h-6" />
+                <Button 
+                    variant="ghost" 
+                    class="ml-3 h-6 w-6 bg-transparent rounded-full text-gray-400 hover:text-gray-600 p-0.5 hover:scale-110 transition-all duration-300"
+                > 
+                    <Pencil class="w-4 h-4" />
                 </Button>
             </Dialog.Trigger>
             <Dialog.Content class="sm:max-w-[425px]">
@@ -158,14 +167,14 @@
         </Dialog.Root>
     </div>
 
-    <div class="relative h-80 w-80 mx-auto text-black rounded-full flex justify-center items-center">
+    <div class="relative h-72 w-72 mx-auto text-gray-800 rounded-full flex justify-center items-center transition-opacity duration-500 {status === 'running' ? 'opacity-90' : 'opacity-100'}">
         <TimerDisplay 
             minutes={minutes} 
             seconds={seconds} 
             initialDuration={getDuration()}
         />
     </div>
-    
+
     <TimerControls
         status={status}
         onStart={startTimer}
@@ -173,10 +182,17 @@
         onReset={resetTimer}
     />
 
-    <div class="flex justify-center gap-4 mt-8">
+    <div class="flex justify-center gap-3 mt-8">
         <Dialog.Root>
-            <Dialog.Trigger>
-                <Button variant="outline">Settings</Button>
+            <Dialog.Trigger disabled={status === 'running'}>
+                <Button 
+                    variant="ghost" 
+                    disabled={status === 'running'} 
+                    title={status === 'running' ? 'Stop the timer to change settings' : 'Settings'}
+                    class="text-gray-500 hover:text-gray-700 transition-all duration-300 hover:scale-105 {status === 'running' ? 'opacity-50' : ''}"
+                >
+                    Settings
+                </Button>
             </Dialog.Trigger>
             <Dialog.Content class="sm:max-w-[425px]">
                 <Dialog.Header>
@@ -191,7 +207,12 @@
 
         <Dialog.Root>
             <Dialog.Trigger>
-                <Button variant="outline">History</Button>
+                <Button 
+                    variant="ghost"
+                    class="text-gray-500 hover:text-gray-700 transition-all duration-300 hover:scale-105"
+                >
+                    History
+                </Button>
             </Dialog.Trigger>
             <Dialog.Content class="sm:max-w-[600px]">
                 <Dialog.Header>

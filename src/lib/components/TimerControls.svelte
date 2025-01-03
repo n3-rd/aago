@@ -9,34 +9,31 @@
     }>();
 </script>
 
-<div class="flex gap-4 justify-center my-4">
+<div class="flex gap-3 justify-center my-8">
     {#if props.status === 'stopped' || props.status === 'paused'}
         <Button
             onclick={props.onStart}
-            class="bg-green-600 hover:bg-green-700 text-white px-6 py-4 rounded-3xl"
+            class="bg-gray-100 hover:bg-gray-200 text-gray-600 p-3 rounded-full transition-all duration-300 hover:scale-105 animate-in fade-in-50"
         >
-            <!-- {props.status === 'stopped' ? 'Start' : 'Resume'} -->
-            <Play class="w-6 h-6" />
+            <Play class="w-5 h-5" />
         </Button>
     {/if}
     
     {#if props.status === 'running'}
         <Button
             onclick={props.onPause}
-            class=" text-white px-6 py-4 rounded-3xl"
+            class="bg-gray-100 hover:bg-gray-200 text-gray-600 p-3 rounded-full transition-all duration-300 hover:scale-105 animate-in fade-in-50"
         >
-            <!-- Pause -->
-            <Pause class="w-6 h-6" />
+            <Pause class="w-5 h-5" />
         </Button>
     {/if}
     
     {#if props.status !== 'stopped' && props.status == 'paused'}
         <Button
             onclick={props.onReset}
-            class="bg-red-500 hover:bg-red-600 text-white px-6 py-4 rounded-3xl"
+            class="bg-gray-100 hover:bg-gray-200 text-gray-600 p-3 rounded-full transition-all duration-300 hover:scale-105 animate-in fade-in-50"
         >
-            <!-- Reset -->
-            <RefreshCcw class="w-6 h-6" />
+            <RefreshCcw class="w-5 h-5" />
         </Button>
     {/if}
 </div> 
