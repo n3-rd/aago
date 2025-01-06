@@ -184,48 +184,4 @@
         onPause={pauseTimer}
         onReset={resetTimer}
     />
-
-    <div class="flex justify-center gap-3 mt-8">
-        <Dialog.Root>
-            <Dialog.Trigger disabled={status === 'running'}>
-                <Button 
-                    variant="ghost" 
-                    disabled={status === 'running'} 
-                    title={status === 'running' ? 'Stop the timer to change settings' : 'Settings'}
-                    class="text-gray-500 hover:text-gray-700 transition-all duration-300 hover:scale-105 {status === 'running' ? 'opacity-50' : ''}"
-                >
-                    Settings
-                </Button>
-            </Dialog.Trigger>
-            <Dialog.Content class="sm:max-w-[425px]">
-                <Dialog.Header>
-                    <Dialog.Title>Timer Settings</Dialog.Title>
-                    <Dialog.Description>
-                        Adjust your timer durations and preferences.
-                    </Dialog.Description>
-                </Dialog.Header>
-                <TimerSettings onSave={updateSettings} />
-            </Dialog.Content>
-        </Dialog.Root>
-
-        <Dialog.Root>
-            <Dialog.Trigger>
-                <Button 
-                    variant="ghost"
-                    class="text-gray-500 hover:text-gray-700 transition-all duration-300 hover:scale-105"
-                >
-                    History
-                </Button>
-            </Dialog.Trigger>
-            <Dialog.Content class="sm:max-w-[600px]">
-                <Dialog.Header>
-                    <Dialog.Title>Session History</Dialog.Title>
-                    <Dialog.Description>
-                        View your completed and interrupted sessions.
-                    </Dialog.Description>
-                </Dialog.Header>
-                <HistoryDisplay />
-            </Dialog.Content>
-        </Dialog.Root>
-    </div>
 </main>

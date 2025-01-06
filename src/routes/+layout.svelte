@@ -1,6 +1,10 @@
 <script lang="ts">
 	import '../app.css';
-	let { children } = $props();
+	import TitleBar from '$lib/components/TitleBar.svelte';
 </script>
 
-{@render children()}
+<TitleBar />
+
+<main class="pt-[32px]">
+	<slot />
+</main>
