@@ -118,9 +118,7 @@
     });
 </script>
 
-<main class="container mx-auto px-4 py-8 max-w-xl">
-    <h1 class="text-2xl font-light text-center mb-12 tracking-wide">Pomodoro Timer</h1>
-    
+<main class="container mx-auto px-4 py-8 max-w-xl">   
     <div class="text-center mb-8 flex justify-center items-center">
         <div class="flex items-center gap-2">
             {#if timerState === 'work'}
