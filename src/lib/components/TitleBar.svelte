@@ -6,6 +6,7 @@
   import TimerSettings from '$lib/components/TimerSettings.svelte';
   import HistoryDisplay from '$lib/components/HistoryDisplay.svelte';
   import { timerSettings } from '$lib/stores/timerStore';
+  import { timerStatusStore } from '$lib/stores/timerStatusStore';
 
   let appWindow: any;
   let historyOpen = false;
@@ -41,7 +42,13 @@
     <button class="titlebar-button" onclick={() => historyOpen = true}>
       <History class="w-4 h-4" />
     </button>
-    <button class="titlebar-button" onclick={() => settingsOpen = true}>
+    <button 
+      class="titlebar-button" 
+      onclick={() => settingsOpen = true}
+      disabled={$timerStatusStore !== 'stopped'}
+      class:opacity-50={$timerStatusStore !== 'stopped'}
+      class:cursor-not-allowed={$timerStatusStore !== 'stopped'}
+    >
       <Settings class="w-4 h-4" />
     </button>
   </div>
@@ -65,7 +72,7 @@
 </div>
 
 <Dialog.Root bind:open={historyOpen}>
-  <Dialog.Content class="sm:max-w-[600px]">
+  <Dialog.Content class="max-w-[90vw]">
     <Dialog.Header>
       <Dialog.Title>Session History</Dialog.Title>
       <Dialog.Description>
@@ -77,7 +84,7 @@
 </Dialog.Root>
 
 <Dialog.Root bind:open={settingsOpen}>
-  <Dialog.Content class="sm:max-w-[425px]">
+  <Dialog.Content class="max-w-[90vw]">
     <Dialog.Header>
       <Dialog.Title>Timer Settings</Dialog.Title>
       <Dialog.Description>
@@ -128,5 +135,9 @@
   .close:hover {
     background: hsl(var(--destructive));
     color: hsl(var(--destructive-foreground));
+  }
+
+  .titlebar-button:disabled {
+    pointer-events: none;
   }
 </style> 

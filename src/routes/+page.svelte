@@ -12,6 +12,7 @@
     import { Button } from "$lib/components/ui/button";
 	import { Pencil, RefreshCcw, Coffee, Brain, Battery } from 'lucide-svelte';
     import { soundManager } from '$lib/utils/sounds';
+    import { timerStatusStore } from '$lib/stores/timerStatusStore';
 
     let timeLeft = $state(0);
     let status = $state<TimerStatus>('stopped');
@@ -115,6 +116,10 @@
             recordSession(false);
         }
         clearInterval(timer);
+    });
+
+    $effect(() => {
+        $timerStatusStore = status;
     });
 </script>
 
